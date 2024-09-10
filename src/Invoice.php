@@ -2,7 +2,6 @@
 
 namespace Lucymao9\Leqi;
 
-use Evit\PhpGmCrypto\Encryption\EvitSM4Encryption;
 use GuzzleHttp\Client;
 use Lucymao9\Leqi\Exceptions\InvalidArgumentException;
 use Lucymao9\Leqi\Exceptions\InvalidPublicKeyException;
@@ -41,8 +40,11 @@ class Invoice
         if (!isset($config['leqiId']) || !$config['leqiId']) {
             throw new InvalidArgumentException('miss required parameter[leqiId]');
         }
+        if (!isset($config['secret']) || !$config['secret']) {
+            throw new InvalidPublicKeyException('miss required parameter[leqiId]');
+        }
         if (isset($config['host']) && $config['host']) $this->host = $config['host'];
-        $this->secret = $config['secret'] ?? $this->secret;
+        $this->secret = $config['secret'];
         $this->isSandbox = $config['isSandbox'] ?? $this->isSandbox;
         $this->abilityCode = $config['abilityCode'];
         $this->caseCode = $config['caseCode'] ?? '';
@@ -82,8 +84,7 @@ class Invoice
             throw new InvalidResponseException($result['body'] ?? 'invalid response', $result['httpStatusCode'] ?? 500);
         }
         $json = $sm4->decrypt($responseBody['Response']['Data'], 'sm4-ecb', hex2bin($this->secret),'base64');
-        $data = json_decode($json, true);
-        return $data;
+        return json_decode($json, true);
     }
 
     /**
@@ -101,12 +102,8 @@ class Invoice
             'lysl' => $params['quantity'],//领用数量
             'ywlsh' => $params['seq_id'],//业务流水号
         ];
-//        if (isset($params['certificate_ids']) && $params['certificate_ids'])
-//            $json['certificate_ids'] = $params['certificate_ids'];
 
-
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -122,8 +119,7 @@ class Invoice
             'nsrsbh' => $params['seller_tax_serial'],//纳税人识别号/统一社会信用代码
         ];
 
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -143,8 +139,7 @@ class Invoice
             'ywlsh' => $params['seq_id'],//业务流水号
         ];
 
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -160,8 +155,7 @@ class Invoice
             'xsfnsrsbh' => $params['seller_tax_serial'],//纳税人识别号/统一社会信用代码
             'sxedsq' => $params['date'],//发票额度属期 yyyy-MM
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -176,8 +170,7 @@ class Invoice
         $content = [
             'nsrsbh' => $params['seller_tax_serial'],//纳税人识别号/统一社会信用代码
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -192,8 +185,7 @@ class Invoice
         $content = [
             'nsrsbh' => $params['seller_tax_serial'],//纳税人识别号/统一社会信用代码
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 //7 查询可用税率信息 CXKYSL
 
@@ -226,8 +218,7 @@ class Invoice
             'sjc' => $params['time'] ?? '',//时间戳,格式：yyyyMMddHHmmss,首次下载时为空；非首次下载时，传入上次下载返回的时间戳.格式：yyyyMMddHHmmss
             'sjswjgdm' => $params['code'] ?? '',//省级税务机关代码
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -256,8 +247,7 @@ class Invoice
             'pageNumber' => $params['page'] ?? '',//页码
             'pageSize' => $params['page_size'] ?? '',//每页数量
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -273,8 +263,7 @@ class Invoice
             'xsfnsrsbh' => $params['seller_tax_serial'],//纳税人识别号/统一社会信用代码
             'uuid' => $params['uuid'],//红字确认单 UUID
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -381,8 +370,7 @@ class Invoice
 
             ];
         }
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -397,8 +385,7 @@ class Invoice
         $content = [
             'sllsh' => $params['seq_id'],//受理流水号,开票接口返回的流水号
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -446,8 +433,7 @@ class Invoice
             ],
         ];
 
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -465,8 +451,7 @@ class Invoice
             'hzqrdbh' => $params['invoice_code'],//红字确认单编号
             'qrlx' => $params['invoice_state'],//确认类型 Y：同意N：不同意C：撤销
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -491,8 +476,7 @@ class Invoice
             "hzfpje" => $params['red_invoice_amount'],//"红字发票金额",业务类型为“0”时必填
             "hzfpse" => $params['red_invoice_amount_tax'],//"红字发票税额",业务类型为“0”时必填
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 //16 查询发票汇总确认信息 CXFPHZQRXX
 
@@ -512,8 +496,7 @@ class Invoice
             "ptbh" => $this->leqiId,//"平台编号",
             "yf" => $params['month'],//"月份",yyyy-MM
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
     /**
@@ -527,10 +510,15 @@ class Invoice
         $serviceCode = 'CXCEZSBM';
         $content = [
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode]);
     }
 
+    /**
+     * 虚拟单位企业数据查询接口，用于沙盒和能力测试
+     * @param array $params
+     * @return mixed
+     * @throws InvalidResponseException
+     */
     public function getFakeCompany(array $params = [])
     {
         $serviceCode = 'LQSX_SWZJ_GT4_CXXNQYXX';
@@ -538,11 +526,16 @@ class Invoice
             'nsrsbh' => $params['seller_tax_serial'],
             'ssjswjgDm' => $params['agent_code'],
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode, 'isControl' => true]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode, 'isControl' => true]);
     }
 
 
+    /**
+     * 企业信息初始化接口，用于沙盒和能力测试
+     * @param array $params
+     * @return mixed
+     * @throws InvalidResponseException
+     */
     public function initFakeCompanyInfo(array $params = [])
     {
         $serviceCode = 'LQSX_SWZJ_GT4_QYXXCSH';
@@ -550,8 +543,7 @@ class Invoice
             'nsrsbh' => $params['seller_tax_serial'],
             'ssjswjgDm' => $params['agent_code'],
         ];
-        $result = $this->_doRequest('post', $content, ['fwbm' => $serviceCode, 'isControl' => true]);
-        return $result;
+        return $this->_doRequest('post', $content, ['fwbm' => $serviceCode, 'isControl' => true]);
     }
 
 }
