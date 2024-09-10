@@ -1,0 +1,20 @@
+{
+    "name": "lucymao9\/leqi-invoice",
+    "description": "乐企开票SDK",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "lucymao9",
+            "email": "495505956@qq.com"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "^7.8",
+        "lpilp/guomi": "1.0.4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lucymao9\\leqi-invoice\\": "src"
+        }
+    }
+}
