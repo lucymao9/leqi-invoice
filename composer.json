@@ -10,7 +10,7 @@
     ],
     "require": {
         "guzzlehttp/guzzle": "^7.8",
-        "lpilp/guomi": "1.0.4.1"
+        "lpilp/guomi": "^1.0.4.1"
     },
     "autoload": {
         "psr-4": {
