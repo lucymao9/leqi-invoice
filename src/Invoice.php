@@ -56,7 +56,7 @@ class Invoice
     {
         $options = [];
         $sm4 = new RtSm4(hex2bin($this->secret));
-        $encBody = $sm4->encrypt($content ? json_encode($content, 256) : '{}','sm4-ecb',hex2bin($this->secret),'base64');
+        $encBody = $sm4->encrypt($content ? json_encode($content, 256) : '{}', 'sm4-ecb', hex2bin($this->secret), 'base64');
         $options['body'] = $encBody;
         $options['headers'] = [
             'fwbm' => $opts['fwbm'],//添加服务编码
@@ -83,7 +83,7 @@ class Invoice
         if (!isset($responseBody['Response']['Data'])) {
             throw new InvalidResponseException($result['body'] ?? 'invalid response', $result['httpStatusCode'] ?? 500);
         }
-        $json = $sm4->decrypt($responseBody['Response']['Data'], 'sm4-ecb', hex2bin($this->secret),'base64');
+        $json = $sm4->decrypt($responseBody['Response']['Data'], 'sm4-ecb', hex2bin($this->secret), 'base64');
         return json_decode($json, true);
     }
 
@@ -327,7 +327,7 @@ class Invoice
                 'sfzsgmfyhzhbq' => $v['show_buyer_bank'] ?? '',//是否展示购买方银行账号标签
                 'skrxm' => $v['cashier_name'] ?? '',//收款人姓名
                 'fhrxm' => $v['reviewer_name'] ?? '',//复核人姓名
-                'fpmxList'=>[
+                'fpmxList' => [
                     [
                         'mxxh' => $v['serial_no'],//明细序号
                         'dylzfpmxxh' => $v['blue_serial_no'] ?? '',//对应蓝字发票明细序号,红票必传
@@ -349,7 +349,7 @@ class Invoice
 
                     ]
                 ],
-                'fjysList'=> [
+                'fjysList' => [
                     [
                         'fjysmc' => $v['additional_name'] ?? '',//附加要素名称
                         'fjyslx' => $v['additional_type'] ?? '',//附加要素类型
@@ -544,6 +544,20 @@ class Invoice
             'ssjswjgDm' => $params['agent_code'],
         ];
         return $this->_doRequest('post', $content, ['fwbm' => $serviceCode, 'isControl' => true]);
+    }
+
+    public function genSeqId()
+    {
+        return $this->leqiId.$this->leqiId2.$this->getRandom(32);
+    }
+
+    public function getRandom($count)
+    {
+        $key = (string)rand(1, 9);
+        for ($i = 0; $i < $count; $i++) {
+            $key .= (string)rand(0, 9); //生成php随机数
+        }
+        return $key;
     }
 
 }
