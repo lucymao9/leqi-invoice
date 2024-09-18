@@ -14,7 +14,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Lucymao9\\leqi\\": "src"
+            "Lucymao9\\Leqi\\": "src"
         }
     }
 }
