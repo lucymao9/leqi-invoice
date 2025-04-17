@@ -327,6 +327,7 @@ class Invoice
                 'sfzsgmfyhzhbq' => $v['show_buyer_bank'] ?? '',//是否展示购买方银行账号标签
                 'skrxm' => $v['cashier_name'] ?? '',//收款人姓名
                 'fhrxm' => $v['reviewer_name'] ?? '',//复核人姓名
+                'fpkjfsDm' => $v['invoice_method'] ?? 5,//发票开具方式代码
                 'fpmxList' => [
                     [
                         'mxxh' => $v['serial_no'],//明细序号
