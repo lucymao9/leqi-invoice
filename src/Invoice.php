@@ -17,7 +17,7 @@ class Invoice
     protected $leqiId = '';//接入单位|直连单位
     protected $leqiId2 = '';//使用单位
 
-
+    //test
     /**
      * 能力编号
      * @var mixed
